@@ -4,7 +4,7 @@
 </script>
 
 <button class="ms-3 rounded-full ring-gray-400 focus:ring-4 dark:ring-gray-600">
-    <Avatar>avatar</Avatar>
+    <Avatar>A</Avatar>
 </button>
 <Dropdown placement="bottom-end">
     <DropdownHeader>

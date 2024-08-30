@@ -1,11 +1,16 @@
 <script>
-    import {Sidebar, SidebarDropdownWrapper, SidebarGroup, SidebarItem, SidebarWrapper, Tooltip} from "flowbite-svelte";
+    import {
+        Sidebar, SidebarCta,
+        SidebarDropdownWrapper,
+        SidebarGroup,
+        SidebarItem,
+        SidebarWrapper,
+        Tooltip
+    } from "flowbite-svelte";
     import { page } from '$app/stores';
     import { afterNavigate } from '$app/navigation';
     import {
-        AngleDownOutline, AngleUpOutline,
-        GridPlusOutline,
-        MessagesOutline,
+        AngleDownOutline, AngleLeftOutline, AngleRightOutline, AngleUpOutline, GridPlusOutline
     } from "flowbite-svelte-icons";
     import config from 'tailwindcss/defaultTheme';
     import {onMount} from "svelte";
@@ -37,15 +42,20 @@
         { name: 'Speeding', icon: GridPlusOutline, href: '/speeding' },
     ];
 
-    let lg;
-    const checkLg = () => {lg = window.matchMedia(`(min-width: ${config.screens.lg})`).matches}
+    let lg,sm;
+    const checkWidth = () => {
+        lg = window.matchMedia(`(min-width: ${config.screens.lg})`).matches
+        sm = window.matchMedia(`(min-width: ${config.screens.sm})`).matches
+    }
     onMount(() => {
-        checkLg()
-        window.addEventListener('resize', checkLg);
+        checkWidth()
+        window.addEventListener('resize', checkWidth);
         return () => {
-            window.removeEventListener('resize', checkLg);
+            window.removeEventListener('resize', checkWidth);
         };
     })
+
+    let collapsed=false;
 
 </script>
 
@@ -53,7 +63,7 @@
         class={drawerHidden ? 'hidden' : ''}
         activeUrl={mainSidebarUrl}
         activeClass="bg-gray-100 dark:bg-gray-700"
-        asideClass="fixed sm:static inset-0 z-30 min-h-full w-auto lg:w-64 lg:h-auto border-e border-gray-200 dark:border-gray-600 lg:overflow-y-visible lg:pt-16 lg:block"
+        asideClass={`fixed sm:static inset-0 z-30 min-h-full w-auto ${collapsed?'':'lg:w-64'} lg:h-auto border-e border-gray-200 dark:border-gray-600 lg:overflow-y-visible lg:pt-16 lg:block`}
 >
     <SidebarWrapper
             divClass="overflow-y-auto px-3 pt-20 lg:pt-5 h-full bg-white scrolling-touch max-w-2xs lg:h-[calc(100vh-4rem)] lg:block dark:bg-gray-800 lg:me-0 lg:sticky top-2"
@@ -62,7 +72,7 @@
             <SidebarGroup ulClass={groupClass} class="mb-3">
                 {#each items as { name, icon, children, href } (name)}
                     {#if children}
-                        <SidebarDropdownWrapper label={lg ? name : ''} class="pr-3">
+                        <SidebarDropdownWrapper label={collapsed&&sm ? '' : name} class="pr-3">
                             <AngleDownOutline slot="arrowdown" strokeWidth="3.3" size="sm" />
                             <AngleUpOutline slot="arrowup" strokeWidth="3.3" size="sm" />
                             <svelte:component this={icon} slot="icon" class={iconClass} />
@@ -79,7 +89,7 @@
                         </SidebarDropdownWrapper>
                     {:else}
                         <SidebarItem
-                                label={lg ? name : ''}
+                                label={collapsed&&sm ? '' : name}
                                 {href}
                                 spanClass="ml-3"
                                 class={itemClass}
@@ -93,6 +103,19 @@
                     {/if}
                 {/each}
             </SidebarGroup>
+            <SidebarCta
+                    divWrapperClass="p-4 mt-6"
+                    divClass="grid justify-items-end"
+                    spanClass=""
+            >
+                <button slot="icon" on:click={() => (collapsed = !collapsed)} type="button">
+                    {#if (collapsed)}
+                        <AngleRightOutline class={iconClass}/>
+                    {:else}
+                        <AngleLeftOutline class={iconClass}/>
+                    {/if}
+                </button>
+            </SidebarCta>
         </nav>
     </SidebarWrapper>
 </Sidebar>
