@@ -5,15 +5,17 @@ export async function load({request, platform}) {
     const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
     const {searchParams} = new URL(request.url)
     const selected = searchParams.get('selected').split(',')
+    const result = []
     for (const deviceId of selected) {
         const url = `http://${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         const response = await fetch(url, request);
         if (response.ok) {
-            return {events: await getSpeedEvents(selected, await response.json())}
+            result.push(await getSpeedEvents(selected, await response.json()))
         } else {
             throw new Error(await response.text())
         }
     }
+    return result.flat()
 }
 
 async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='BR') {
