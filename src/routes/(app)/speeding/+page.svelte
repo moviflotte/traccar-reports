@@ -18,11 +18,12 @@
     </div>
     <div slot="end" class="space-x-2 pl-4">
         <Button class="whitespace-nowrap" on:click={async () => {
+            const [start, end] = datePicker.getDates()
             if (selected && start && end) {
-                await getData(selected, datePicker, end)
+                await getData(selected, new Date(start).toISOString(), new Date(end).toISOString())
                 reportReady = true
             } else {
-                console.log(selected, datePicker.getDates(), end)
+                console.log(selected, start, end)
                 alert('Please select devices and dates')
             }
         }}>Generate</Button>
