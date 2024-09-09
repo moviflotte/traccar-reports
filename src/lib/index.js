@@ -1,6 +1,7 @@
 export async function forwardRequest({ request, platform }) {
     try {
         const host = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
+        if (!host) { return new Response('please configure server', {status: 500}) }
         const url = new URL(request.url)
         url.host = host
         url.port = 80

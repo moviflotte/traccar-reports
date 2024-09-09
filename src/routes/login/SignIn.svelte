@@ -31,7 +31,7 @@
             });
             if (response.ok) {
                 session.set(await response.json());
-                await goto('/devices')
+                await goto('/')
             } else {
                 setError(await response.text());
             }

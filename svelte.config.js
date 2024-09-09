@@ -1,6 +1,6 @@
-//import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-auto';
 //import adapter from '@sveltejs/adapter-static';
-import adapter from '@sveltejs/adapter-cloudflare';
+//import adapter from '@sveltejs/adapter-cloudflare';
 const config = {
 	kit: {
 		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
