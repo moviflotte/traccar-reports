@@ -1,11 +1,12 @@
 <script>
-    import {Button, Heading, Toolbar} from "flowbite-svelte";
+    import {Button, Heading, Toolbar, Spinner} from "flowbite-svelte";
     import SelectDevices from "$lib/components/SelectDevices.svelte";
     import DatePicker from "$lib/components/DatePicker.svelte";
     import {setAlert} from "$lib/store.js";
-    let reportReady = false
+    let loadingReport = false
     let start, end, selected, datePicker
     export let data
+    let reportLoaded = false
 </script>
 
 <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
@@ -19,19 +20,27 @@
     <div slot="end" class="space-x-2 pl-4">
         <Button class="whitespace-nowrap" on:click={async () => {
             [start, end] = datePicker.getDates()
-            reportReady = false
+            loadingReport = false
+            reportLoaded = false
             if (selected && selected.length && start && end) {
-                setTimeout(() => reportReady = true, 100)
+                setTimeout(() => loadingReport = true, 100)
             } else {
-                reportReady = false
                 setAlert('Please select devices and dates')
             }
-        }}>Generate</Button>
+        }}>
+            {#if loadingReport}
+                <Spinner class="me-3" size="4" color="white"/>
+            {/if}
+            {loadingReport?'Loading...':'Generate'}
+        </Button>
     </div>
 </Toolbar>
 
-{#if reportReady}
-    <iframe title="report" class="h-full w-full pb-4" src="{
+{#if loadingReport || reportLoaded}
+    <iframe on:load={() => {
+        reportLoaded=true
+        loadingReport=false
+    }} title="report" class="h-full w-full pb-4" src="{
         `/reports/speeding?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}&selected=${selected}`
     }"/>
 {/if}

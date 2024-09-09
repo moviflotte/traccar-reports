@@ -12,10 +12,10 @@
     import {DownloadSolid} from "flowbite-svelte-icons";
     export let data;
     let showExport = true
-    window.addEventListener("afterprint", () => {
-        showExport = true
-    });
 </script>
+
+<svelte:window on:afterprint={showExport=true} />
+
 <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl pb-10">
     Relatório de Excesso de Velocidade
 </Heading>

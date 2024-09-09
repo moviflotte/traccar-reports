@@ -1,10 +1,7 @@
 import distance from "@turf/distance";
 import {point} from "@turf/helpers";
 
-export async function load({request, platform}) {
-    const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
-    const {searchParams} = new URL(request.url)
-    const selected = searchParams.get('selected').split(',')
+async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
         const url = `http://${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
@@ -16,6 +13,13 @@ export async function load({request, platform}) {
         }
     }
     return result.flat()
+}
+
+export async function load({request, platform}) {
+    const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
+    const {searchParams} = new URL(request.url)
+    const selected = searchParams.get('selected').split(',')
+    return {events: await getEvents(selected, traccar, searchParams, request)}
 }
 
 async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='BR') {
