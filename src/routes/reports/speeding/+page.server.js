@@ -33,15 +33,23 @@ async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 
         }
         const reduced = results.reduce((acc, cur, idx, src) => {
             const last = acc.length && acc.slice(-1)[0]
-            if (last && new Date(cur.fixTime) - new Date(src[idx - 1].fixTime) < 1000 * 60 * 2) {
+            const dist = last &&
+                distance(point([cur.longitude, cur.latitude]),
+                    point([src[idx - 1].longitude, src[idx - 1].latitude]))
+            if (last &&
+                (
+                    new Date(cur.fixTime) - new Date(src[idx - 1].fixTime) < 1000 * 60 * 2 ||
+                    dist < 0.1
+                )) {
+                last.points.push(cur)
                 last.eventTime = new Date(cur.fixTime) - new Date(last.fixTime)
-                last.attributes.maxSpeed = Math.max(last.attributes.maxSpeed, cur.speed)
-                last.distance += distance(point([cur.longitude, cur.latitude]), point([src[idx - 1].longitude, src[idx - 1].latitude]))
+                last.maxSpeed = Math.max(last.maxSpeed, cur.speed)
+                last.distance += dist
             } else {
+                cur.points = [cur]
                 cur.positionId = cur && cur.id
-                cur.roadSpeedLimit = cur.speed_limit
                 cur.deviceId = d.id
-                cur.attributes = { speedLimit: cur.speed_limit, speed: cur.speed, maxSpeed: cur.speed }
+                cur.maxSpeed = cur.speed
                 cur.eventTime = 0
                 cur.distance = 0
                 acc.push(cur)
@@ -111,7 +119,7 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
         const edge = edges[mp.edge_index]
         const position = route[mIndex + i]
         if (edge && (edge.speed_limit + (threshold || 0)) < position.speed * 1.852) {
-            results.push({ ...mp, ...edge, ...position, position })
+            results.push({ ...mp, ...edge, ...position })
         }
     })
 
