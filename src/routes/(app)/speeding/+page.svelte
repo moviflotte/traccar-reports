@@ -2,7 +2,7 @@
     import {Button, Heading, Toolbar} from "flowbite-svelte";
     import SelectDevices from "$lib/components/SelectDevices.svelte";
     import DatePicker from "$lib/components/DatePicker.svelte";
-    import {getData} from "$lib/reports/speeding";
+    import {setAlert} from "$lib/store.js";
     let reportReady = false
     let start, end, selected, datePicker
     export let data
@@ -18,19 +18,16 @@
     </div>
     <div slot="end" class="space-x-2 pl-4">
         <Button class="whitespace-nowrap" on:click={async () => {
-            const [start, end] = datePicker.getDates()
-            if (selected && start && end) {
-                await getData(selected, new Date(start).toISOString(), new Date(end).toISOString())
+            [start, end] = datePicker.getDates()
+            if (selected && selected.length && start && end) {
                 reportReady = true
-            } else {
-                console.log(selected, start, end)
-                alert('Please select devices and dates')
-            }
+            } else { setAlert('Please select devices and dates') }
         }}>Generate</Button>
     </div>
 </Toolbar>
 
 {#if reportReady}
-    <iframe title="report" class="h-full w-full pb-4" src="/templates/speeding">
-    </iframe>
+    <iframe title="report" class="h-full w-full pb-4" src="{
+        `/reports/speeding?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}&selected=${selected}`
+    }"/>
 {/if}

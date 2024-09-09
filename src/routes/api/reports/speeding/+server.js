@@ -1,7 +1,4 @@
-import {forwardRequest} from "$lib";
-
-export const GET = async event => {
-    console.log(event)
+export const GET = async () => {
     try {
         const response = await fetch('/api/reports/route');
         if (response.ok) {
