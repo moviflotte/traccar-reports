@@ -1,6 +1,6 @@
 <script>
     import { MultiSelect } from 'flowbite-svelte';
-    let selected = [];
+    export let selected;
     export let devices;
 </script>
 

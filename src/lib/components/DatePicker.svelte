@@ -22,10 +22,8 @@
 <script>
     import {DateRangePicker} from 'flowbite-datepicker'
     import {onMount} from "svelte";
+    export let datePicker;
     onMount(() => {
-        const dateRangePickerEl = document.getElementById('date-range-picker');
-        new DateRangePicker(dateRangePickerEl, {
-            // options
-        });
+        datePicker = new DateRangePicker(document.getElementById('date-range-picker'));
     })
 </script>

@@ -2,7 +2,9 @@
     import {Button, Heading, Toolbar} from "flowbite-svelte";
     import SelectDevices from "$lib/components/SelectDevices.svelte";
     import DatePicker from "$lib/components/DatePicker.svelte";
+    import {getData} from "$lib/reports/speeding";
     let reportReady = false
+    let start, end, selected, datePicker
     export let data
 </script>
 
@@ -11,11 +13,19 @@
 </Heading>
 <Toolbar class="w-full py-4 text-gray-500 dark:text-gray-400" embedded>
     <div class="flex gap-4">
-        <SelectDevices devices={data.devices} />
-        <DatePicker></DatePicker>
+        <SelectDevices devices={data.devices} bind:selected="{selected}"/>
+        <DatePicker bind:datePicker="{datePicker}"></DatePicker>
     </div>
-    <div slot="end" class="space-x-2">
-        <Button class="whitespace-nowrap" on:click={() => {reportReady = true}}>Generate</Button>
+    <div slot="end" class="space-x-2 pl-4">
+        <Button class="whitespace-nowrap" on:click={async () => {
+            if (selected && start && end) {
+                await getData(selected, datePicker, end)
+                reportReady = true
+            } else {
+                console.log(selected, datePicker.getDates(), end)
+                alert('Please select devices and dates')
+            }
+        }}>Generate</Button>
     </div>
 </Toolbar>
 

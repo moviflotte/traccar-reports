@@ -1,0 +1,18 @@
+const positions = '/api/reports/positions'
+
+export async function getData(selected, start, end) {
+    try {
+        for (const deviceId of selected) {
+            const url = `${positions}?deviceId=${deviceId}&from=${start}&to=${end}`;
+            const response = await fetch('');
+            if (response.ok) {
+                return await response.json()
+            } else {
+                alert(await response.text())
+            }
+        }
+    } catch (e) {
+        alert(e.message)
+    }
+    return {devices: []}
+}
