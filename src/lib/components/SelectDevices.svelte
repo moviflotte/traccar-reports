@@ -1,12 +1,7 @@
 <script>
     import { MultiSelect } from 'flowbite-svelte';
-
     let selected = [];
-    let countries = [
-        { value: 1, name: 'Device1' },
-        { value: 2, name: 'Device2' },
-        { value: 3, name: 'Device3' }
-    ];
+    export let devices;
 </script>
 
-<MultiSelect placeholder="Select devices..." items={countries} bind:value={selected} size="lg"  />
+<MultiSelect placeholder="Select devices..." items={devices.map(d => ({value: d.id, ...d}))} bind:value={selected} size="lg"  />

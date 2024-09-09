@@ -13,7 +13,7 @@
 <div class="flex min-h-full">
     <Sidebar bind:drawerHidden />
     <div class="min-h-full grow overflow-y-auto pt-[60px]">
-        <div class="p-8">
+        <div class="p-8 h-full">
             <slot />
         </div>
     </div>
