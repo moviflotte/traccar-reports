@@ -19,9 +19,13 @@
     <div slot="end" class="space-x-2 pl-4">
         <Button class="whitespace-nowrap" on:click={async () => {
             [start, end] = datePicker.getDates()
+            reportReady = false
             if (selected && selected.length && start && end) {
-                reportReady = true
-            } else { setAlert('Please select devices and dates') }
+                setTimeout(() => reportReady = true, 100)
+            } else {
+                reportReady = false
+                setAlert('Please select devices and dates')
+            }
         }}>Generate</Button>
     </div>
 </Toolbar>

@@ -10,10 +10,7 @@
         TableHeadCell, Toolbar
     } from "flowbite-svelte";
     import {DownloadSolid} from "flowbite-svelte-icons";
-    const data = {devices: []}
-    for (let i = 0; i < 30; i++) {
-        data.devices.push({name: 'device ' +i});
-    }
+    export let data;
     let showExport = true
     window.addEventListener("afterprint", () => {
         showExport = true
@@ -44,7 +41,7 @@
         {/each}
     </TableHead>
     <TableBody>
-        {#each data.devices as device}
+        {#each data.events as device}
             <TableBodyRow class="text-base">
                 <TableBodyCell class="max-w-64 flex items-center space-x-6 whitespace-nowrap p-4  overflow-hidden truncate">
                     <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
