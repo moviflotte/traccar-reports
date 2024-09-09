@@ -20,10 +20,17 @@
 </div>
 
 <script>
-    import {DateRangePicker} from 'flowbite-datepicker'
+    import {Datepicker} from "../../../node_modules/flowbite-datepicker";
+    import {DateRangePicker} from "../../../node_modules/flowbite-datepicker";
+    import pt from "../../../node_modules/flowbite-datepicker/js/i18n/locales/pt.js";
+    Datepicker.locales.pt = pt.pt;
     import {onMount} from "svelte";
     export let datePicker;
     onMount(() => {
-        datePicker = new DateRangePicker(document.getElementById('date-range-picker'));
+        datePicker = new DateRangePicker(
+            document.getElementById('date-range-picker'), {
+                language: 'pt'
+            }
+        );
     })
 </script>
