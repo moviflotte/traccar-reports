@@ -103,7 +103,7 @@
                     {event.points.length > 1 ? Math.round(event.distance) : ''}
                 </TableBodyCell>
                 <TableBodyCell class="text-right">
-                    <img src="{buildGoogleStaticMapURL(event.points.map(e => e.shapePoints).flat())}" alt="map">
+                    <img src="{buildGoogleStaticMapURL(event.e.shapePoints)}" alt="map">
                 </TableBodyCell>
             </TableBodyRow>
         {/each}
