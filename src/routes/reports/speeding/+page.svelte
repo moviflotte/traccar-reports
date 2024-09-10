@@ -16,6 +16,14 @@
     let showExport = true
     let tbl
     let maximized = false
+
+    function buildGoogleStaticMapURL(coordinates) {
+        const baseUrl = "https://maps.googleapis.com/maps/api/staticmap?";
+        const size = "size=300x200";
+        const path = `path=color:0xff0000ff|weight:5|${coordinates.map(node => `${node[0]},${node[1]}`).join('|')}`;
+        const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
+        return `${baseUrl}${size}&${path}&key=${apiKey}`;
+    }
 </script>
 
 <svelte:window on:afterprint={() => showExport=true} />
@@ -67,14 +75,15 @@
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
         <TableHeadCell class="text-center">{$t('time')}</TableHeadCell>
         <TableHeadCell class="text-center">{$t('address')}</TableHeadCell>
-        <TableHeadCell class="text-center p-0 w-16">{$t('max allowed')}</TableHeadCell>
+        <TableHeadCell class="text-center p-0 w-20">{$t('max allowed')}</TableHeadCell>
         <TableHeadCell class="text-center p-0 w-20">{$t('max detected')}</TableHeadCell>
         <TableHeadCell class="text-center">{$t('duration')}</TableHeadCell>
         <TableHeadCell class="text-right w-16">{$t('km')}</TableHeadCell>
+        <TableHeadCell class="text-center">{$t('map')}</TableHeadCell>
     </TableHead>
     <TableBody>
         {#each data.events as event}
-            <TableBodyRow class="text-xs">
+            <TableBodyRow>
                 <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0">
                     {new Date(event.fixTime).toLocaleString()}
                 </TableBodyCell>
@@ -84,7 +93,7 @@
                 <TableBodyCell>
                     <SpeedLimitSign limit="{event.speed_limit}"/>
                 </TableBodyCell>
-                <TableBodyCell class="text-right">
+                <TableBodyCell class="text-right text-lg">
                     {Math.round(event.maxSpeed * 1.852)}
                 </TableBodyCell>
                 <TableBodyCell class="text-center">
@@ -92,6 +101,9 @@
                 </TableBodyCell>
                 <TableBodyCell class="text-right">
                     {event.points.length > 1 ? Math.round(event.distance) : ''}
+                </TableBodyCell>
+                <TableBodyCell class="text-right">
+                    <img src="{buildGoogleStaticMapURL(event.points.map(e => e.shapePoints).flat())}" alt="map">
                 </TableBodyCell>
             </TableBodyRow>
         {/each}
