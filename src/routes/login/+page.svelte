@@ -2,7 +2,7 @@
     import '../../app.css'
     import { Label, Input } from 'flowbite-svelte';
     import SignIn from './SignIn.svelte';
-    let title = 'Sign in to Configurator';
+    let title = 'Sign in';
     let site = {
         name: 'Configurator',
         img: '/logo.png',
