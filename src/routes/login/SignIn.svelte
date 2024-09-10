@@ -3,7 +3,7 @@
     import {writable} from "svelte/store";
     import { setError, session } from '$lib/store';
     import {goto} from "$app/navigation";
-    export let title = 'Sign in to Configurator';
+    export let title = 'Sign in';
     export let rememberMe = true;
     export let lostPassword = true;
     export let createAccount = true;

@@ -19,7 +19,7 @@
         />
         <NavBrand href="/" class="lg:w-60">
             <img
-
+                    src="{import.meta.env.VITE_LOGO_URL}"
                     class="me-2.5 h-6 sm:h-8"
                     alt="Logo"
             />
