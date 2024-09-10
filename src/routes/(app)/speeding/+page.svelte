@@ -17,7 +17,7 @@
         <SelectDevices devices={data.devices} bind:selected="{selected}"/>
         <DatePicker bind:datePicker="{datePicker}"></DatePicker>
     </div>
-    <div slot="end" class="space-x-2 pl-4">
+    <div class="p-4">
         <Button class="whitespace-nowrap" on:click={async () => {
             [start, end] = datePicker.getDates()
             loadingReport = false

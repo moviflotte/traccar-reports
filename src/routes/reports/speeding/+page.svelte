@@ -9,12 +9,13 @@
         TableHeadCell, Toolbar
     } from "flowbite-svelte";
     import { t } from "$lib/i18n";
-    import { FileChartBarSolid, FilePdfSolid} from "flowbite-svelte-icons";
+    import {ExpandOutline, FileChartBarSolid, FilePdfSolid, MinimizeOutline} from "flowbite-svelte-icons";
     import { utils, writeFileXLSX } from 'xlsx';
     import SpeedLimitSign from "$lib/components/SpeedLimitSign.svelte";
     export let data;
     let showExport = true
     let tbl
+    let maximized = false
 </script>
 
 <svelte:window on:afterprint={() => showExport=true} />
@@ -22,6 +23,24 @@
 {#if showExport }
 <Toolbar embedded class="w-full">
     <div slot="end" class="flex items-center space-x-2">
+        <Button size="sm" color="alternative" class="gap-2 px-3" on:click={() => {
+            if (maximized) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen()
+                    maximized = false
+                }
+            }
+            else {
+                document.documentElement.requestFullscreen()
+                maximized = true
+            }
+        }}>
+            {#if maximized}
+                <MinimizeOutline></MinimizeOutline>
+            {:else}
+                <ExpandOutline></ExpandOutline>
+            {/if}
+        </Button>
         <Button size="sm" color="alternative" class="gap-2 px-3" on:click={() => {
             showExport = false
             setTimeout(() => window.print(), 100)
