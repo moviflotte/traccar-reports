@@ -1,3 +1,6 @@
+import {goto} from "$app/navigation";
+import {error, session, setError} from "$lib/store.js";
+
 export async function forwardRequest({ request, platform }) {
     try {
         const host = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
@@ -10,4 +13,21 @@ export async function forwardRequest({ request, platform }) {
     } catch (e) {
         return new Response(e.message, {status: 500})
     }
+}
+
+
+export async function logout() {
+    try {
+        const response = await fetch('/api/session', {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            session.set({});
+        } else {
+            setError(await response.text());
+        }
+    } catch (e) {
+        error.set(e.message);
+    }
+    await goto('/login')
 }
