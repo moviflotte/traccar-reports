@@ -1,6 +1,3 @@
-import distance from "@turf/distance";
-import {point} from "@turf/helpers";
-
 async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
@@ -21,44 +18,52 @@ export async function load({request, platform}) {
     const selected = searchParams.get('selected').split(',')
     return {events: await getEvents(selected, traccar, searchParams, request)}
 }
+const minMinutes = 2
+function positionsFar(position1, position2) {
+    return new Date(position2.fixTime).getTime() - new Date(position1.fixTime).getTime() > minMinutes * 60 * 1000
+}
 
 async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='BR') {
     const chunk = 100
-    const events = []
+    const results = []
     for (const d of deviceIds) {
         const route = routes.filter(r => r.deviceId === parseInt(d))
-        const results = []
+        let current
         for (let i = 0; i < route.length; i += chunk) {
-            await invokeValhalla(route, i, chunk, country, threshold, results)
+            const result = await invokeValhalla(route, i, chunk, country, threshold, results)
+            if (!result) continue
+            const {
+                matched_points,
+                edges,
+                shape
+            } = result
+            const shapePoints = decodePolyline(shape)
+            matched_points.forEach((mp, mIndex) => {
+                const edge = edges[mp.edge_index]
+                const position = route[mIndex + i]
+                if (edge && (edge.speed_limit + (threshold || 0)) < position.speed * 1.852) {
+                    if (!current ||
+                        current.edges.slice(-1)[0].speed_limit !== edge.speed_limit ||
+                        positionsFar(current.positions.slice(-1)[0], position)) {
+                        current = {
+                            shapes: [],
+                            mPoints: [],
+                            edges: [],
+                            positions: []
+                        }
+                        results.push(current)
+                    }
+                    current.mPoints.push(mp)
+                    current.positions.push(position)
+                    if (!current.edges.find(e => e.id === edge.id)) {
+                        current.edges.push(edge)
+                        current.shapes.push(shapePoints.slice(edge.begin_shape_index, edge.end_shape_index+1))
+                    }
+                }
+            })
         }
-        const reduced = results.reduce((acc, cur, idx, src) => {
-            const last = acc.length && acc.slice(-1)[0]
-            const dist = last &&
-                distance(point([cur.longitude, cur.latitude]),
-                    point([src[idx - 1].longitude, src[idx - 1].latitude]))
-            if (last &&
-                (
-                    new Date(cur.fixTime) - new Date(src[idx - 1].fixTime) < 1000 * 60 * 2 ||
-                    dist < 0.1
-                )) {
-                last.points.push(cur)
-                last.eventTime = new Date(cur.fixTime) - new Date(last.fixTime)
-                last.maxSpeed = Math.max(last.maxSpeed, cur.speed)
-                last.distance += dist
-            } else {
-                cur.points = [cur]
-                cur.positionId = cur && cur.id
-                cur.deviceId = d.id
-                cur.maxSpeed = cur.speed
-                cur.eventTime = 0
-                cur.distance = 0
-                acc.push(cur)
-            }
-            return acc
-        }, [])
-        events.push(...reduced)
     }
-    return events.filter(e => e.eventTime >= minimumMinutes * 60 * 1000)
+    return results
 }
 let  countError = 0, countSuccess = 0
 async function invokeValhalla (route, i, chunk, country, threshold, results, retry = 3) {
@@ -93,22 +98,8 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
         }
         countError++
     }
-    const {
-        // eslint-disable-next-line camelcase
-        matched_points,
-        edges,
-        shape
-    } = await response.json()
     countSuccess++
-    const shapePoints = decodePolyline(shape)
-    matched_points.forEach((mp, mIndex) => {
-        const edge = edges[mp.edge_index]
-        const position = route[mIndex + i]
-        if (edge && (edge.speed_limit + (threshold || 0)) < position.speed * 1.852) {
-                results.push({shapePoints: shapePoints.slice(edge.begin_shape_index, edge.end_shape_index), ...mp, ...edge, ...position})
-        }
-    })
-
+    return response.json()
 }
 
 

@@ -12,18 +12,26 @@
     import {ExpandOutline, FileChartBarSolid, FilePdfSolid, MinimizeOutline} from "flowbite-svelte-icons";
     import { utils, writeFileXLSX } from 'xlsx';
     import SpeedLimitSign from "$lib/components/SpeedLimitSign.svelte";
+    import {VisXYContainer, VisAxis, VisArea, VisTooltip, VisCrosshair, VisLine} from '@unovis/svelte'
     export let data;
     let showExport = true
     let tbl
     let maximized = false
 
-    function buildGoogleStaticMapURL(coordinates) {
+    import {formatDuration, intervalToDuration} from "date-fns";
+    import distance from "@turf/distance";
+    import {point} from "@turf/helpers";
+
+    function buildGoogleStaticMapURL(coordinates, points) {
         const baseUrl = "https://maps.googleapis.com/maps/api/staticmap?";
         const size = "size=300x200";
-        const path = `path=color:0xff0000ff|weight:5|${coordinates.map(node => `${node[0]},${node[1]}`).join('|')}`;
+        const path = coordinates.map(c =>`path=color:0x00ff00ff|weight:6|${c.map(node => `${node[0]},${node[1]}`).join('|')}`).join('&');
+        const markers = points.map(p => `markers=size:tiny|color:red|${p.latitude},${p.longitude}`).join('&')
         const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
-        return `${baseUrl}${size}&${path}&key=${apiKey}`;
+        return `${baseUrl}${size}&${path}&key=${apiKey}&${markers}`;
     }
+    const template = d => `${new Date(d.fixTime).toLocaleTimeString()}<br>${Math.round(d.speed * 1.852)} km/h`
+
 </script>
 
 <svelte:window on:afterprint={() => showExport=true} />
@@ -67,7 +75,7 @@
 {/if}
 
 <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl pb-4">
-    Relatório de Excesso de Velocidade
+    Relatório de Excessos de Velocidade
 </Heading>
 
 <div bind:this={tbl}>
@@ -76,34 +84,63 @@
         <TableHeadCell class="text-center">{$t('time')}</TableHeadCell>
         <TableHeadCell class="text-center">{$t('address')}</TableHeadCell>
         <TableHeadCell class="text-center p-0 w-20">{$t('max allowed')}</TableHeadCell>
-        <TableHeadCell class="text-center p-0 w-20">{$t('max detected')}</TableHeadCell>
-        <TableHeadCell class="text-center">{$t('duration')}</TableHeadCell>
-        <TableHeadCell class="text-right w-16">{$t('km')}</TableHeadCell>
-        <TableHeadCell class="text-center">{$t('map')}</TableHeadCell>
+        <TableHeadCell class="text-center p-0 w-64">{$t('speeding')}</TableHeadCell>
+        <TableHeadCell class="text-center w-[310px]">{$t('map')}</TableHeadCell>
     </TableHead>
     <TableBody>
         {#each data.events as event}
             <TableBodyRow>
                 <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0">
-                    {new Date(event.fixTime).toLocaleString()}
+                    {new Date(event.positions[0].fixTime).toLocaleString()}
                 </TableBodyCell>
-                <TableBodyCell class="p-0 text-center overflow-hidden overflow-ellipsis">
-                    <a target="_blank" href="https://openstreetmap.org/way/{event.way_id}">{(event.names && event.names.join(',')) || ''}</a>
+                <TableBodyCell class="p-0 text-center whitespace-normal ">
+                    <a target="_blank" href="https://openstreetmap.org/way/{event.edges[0].way_id}">
+                        {#each event.edges
+                            .filter(e => e.sign)
+                            .map(e => e.sign)
+                            .map(e => Object.entries(e).map(([k, v]) => `${k}: ${v}`)).flat() as entry
+                        }
+                            {entry}<br>
+                        {/each}
+                        {#each Array.from(new Set(event.edges.filter(e => e.names).map(e => e.names).flat())) as name}
+                            {name}<br>
+                        {/each}
+                    </a>
                 </TableBodyCell>
                 <TableBodyCell>
-                    <SpeedLimitSign limit="{event.speed_limit}"/>
+                    <SpeedLimitSign limit="{event.edges[0].speed_limit}"/>
                 </TableBodyCell>
-                <TableBodyCell class="text-right text-lg">
-                    {Math.round(event.maxSpeed * 1.852)}
+                <TableBodyCell class="text-center {event.positions.length === 1 && 'text-lg'}">
+                    {#if event.positions.length > 1}
+                        <VisXYContainer height="100" data={event.positions}>
+                            <VisArea color="red" opacity={0.2} x={d => new Date(d.fixTime)} y={d => d.speed*1.852} />
+                            <VisLine color="red" x={d => new Date(d.fixTime)} y={d => d.speed*1.852} />
+                            <VisAxis type="x" tickFormat="{(x) => new Date(x).toLocaleTimeString()}" />
+                            <VisAxis type="y" />
+                            <VisCrosshair {template}></VisCrosshair>
+                            <VisTooltip/>
+                        </VisXYContainer>
+                        {
+                            formatDuration(intervalToDuration({
+                                start: new Date(event.positions[0].fixTime),
+                                end: new Date(event.positions.slice(-1)[0].fixTime)
+                            }))
+                        }<br>
+                        {
+                            event.positions.reduce((acc, current, index, positions) => {
+                                if (index === 0) return acc
+                                const previousPosition = positions[index - 1]
+                                const point1 = point([previousPosition.longitude, previousPosition.latitude])
+                                const point2 = point([current.longitude, current.latitude])
+                                return acc + distance(point1, point2, { units: 'kilometers' })
+                            }, 0).toFixed(1) + ' km'
+                        }
+                    {:else}
+                        {Math.round(event.positions[0].speed * 1.852)}
+                    {/if}
                 </TableBodyCell>
-                <TableBodyCell class="text-center">
-                    {event.points.length > 1? new Date(event.eventTime).toISOString().substring(11, 19) : ''}
-                </TableBodyCell>
-                <TableBodyCell class="text-right">
-                    {event.points.length > 1 ? Math.round(event.distance) : ''}
-                </TableBodyCell>
-                <TableBodyCell class="text-right">
-                    <img src="{buildGoogleStaticMapURL(event.shapePoints)}" alt="map">
+                <TableBodyCell class="p-1">
+                    <a target="_blank" href="https://openstreetmap.org/way/{event.edges[0].way_id}"><img src="{buildGoogleStaticMapURL(event.shapes, event.positions)}" alt="map"></a>
                 </TableBodyCell>
             </TableBodyRow>
         {/each}
