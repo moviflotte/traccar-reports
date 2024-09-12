@@ -3,7 +3,8 @@ async function getEvents(selected, traccar, searchParams, request) {
     for (const deviceId of selected) {
         const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         console.log(url)
-        const response = await fetch(url, {...request, redirect: 'follow'});
+        const response = await fetch(url,
+            {headers: {cookie: request.headers.cookie}, redirect: 'follow'})
         if (response.ok) {
             result.push(await getSpeedEvents(selected, await response.json()))
         } else {
