@@ -1,7 +1,7 @@
 async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
-        const url = `/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
+        const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         console.log(url)
         const response = await fetch(url, request);
         if (response.ok) {
