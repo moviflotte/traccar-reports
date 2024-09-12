@@ -1,14 +1,15 @@
 async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
-        const url = `http://${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
+        const s = platform.env.TRACCAR_SERVER_HTTPS || ''
+        const url = `http${s}://${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         console.log(url)
-        const response = await fetch(url, {...request, redirect: 'follow'});
+        const response = await fetch(url, request);
         if (response.ok) {
             result.push(await getSpeedEvents(selected, await response.json()))
         } else {
             console.error(JSON.stringify(response))
-            throw new Error('error status' + response.status)
+            throw new Error('error status ' + response.status)
         }
     }
     return result.flat()
