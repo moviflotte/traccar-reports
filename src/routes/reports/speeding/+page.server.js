@@ -8,8 +8,7 @@ async function getEvents(selected, traccar, searchParams, request) {
         if (response.ok) {
             result.push(await getSpeedEvents(selected, await response.json()))
         } else {
-            console.error(JSON.stringify(response))
-            throw new Error('error status ' + response.status)
+            throw new Error('error status ' + response.status + ' ' + await response.text())
         }
     }
     return result.flat()
