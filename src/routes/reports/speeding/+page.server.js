@@ -1,8 +1,7 @@
 async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
-        const s = platform.env.TRACCAR_SERVER_HTTPS || ''
-        const url = `http${s}://${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
+        const url = `/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         console.log(url)
         const response = await fetch(url, request);
         if (response.ok) {
@@ -17,9 +16,10 @@ async function getEvents(selected, traccar, searchParams, request) {
 
 export async function load({request, platform}) {
     const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
+    const s = (platform && platform.env.TRACCAR_SERVER_HTTPS) || ''
     const {searchParams} = new URL(request.url)
     const selected = searchParams.get('selected').split(',')
-    return {events: await getEvents(selected, traccar, searchParams, request)}
+    return {events: await getEvents(selected, `http${s}://${traccar}`, searchParams, request)}
 }
 const minMinutes = 2
 function positionsFar(position1, position2) {
