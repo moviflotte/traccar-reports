@@ -4,4 +4,7 @@
     export let devices;
 </script>
 
-<MultiSelect placeholder="Select devices..." items={devices.map(d => ({value: d.id, ...d}))} bind:value={selected} size="lg"  />
+<MultiSelect placeholder="Select devices..." items={
+    devices.sort((a, b) => a.name.localeCompare(b.name)).map(d => ({value: d.id, ...d}))
+    } bind:value={selected} size="lg"
+/>
