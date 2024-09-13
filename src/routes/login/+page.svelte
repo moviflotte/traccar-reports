@@ -13,7 +13,7 @@
     let lostPassword = true;
     let createAccount = true;
     let lostPasswordLink = 'forgot-password';
-    let loginTitle = 'Login to your account';
+    let loginTitle = 'Login';
     let registerLink = 'sign-up';
     let createAccountTitle = 'Create account';
 
@@ -47,7 +47,7 @@
                 type="text"
                 name="email"
                 id="email"
-                placeholder="name@company.com"
+                placeholder=""
                 required
                 class="border outline-none dark:border-gray-600 dark:bg-gray-700"
         />
@@ -58,7 +58,7 @@
                 type="password"
                 name="password"
                 id="password"
-                placeholder="••••••••"
+                placeholder=""
                 required
                 class="border outline-none dark:border-gray-600 dark:bg-gray-700"
         />
