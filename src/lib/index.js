@@ -9,8 +9,12 @@ export async function forwardRequest({ request, platform }) {
         url.host = host
         url.port = 80
         url.protocol = 'http:'
-        return await fetch(new Request(url, request))
+        const response = await fetch(new Request(url, request))
+        const body = await response.text()
+        if (response.ok) { return new Response(body) }
+        return new Response(body, {status: 500})
     } catch (e) {
+        console.log(e)
         return new Response(e.message, {status: 500})
     }
 }
