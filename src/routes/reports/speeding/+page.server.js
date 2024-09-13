@@ -4,7 +4,7 @@ async function getEvents(selected, traccar, searchParams, request) {
         const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         console.log(url)
         const response = await fetch(url,
-            {headers: {cookie: request.headers.cookie}, redirect: 'follow'})
+            {headers: {cookie: request.headers.get('cookie')}, redirect: 'follow'})
         if (response.ok) {
             result.push(await getSpeedEvents(selected, await response.json()))
         } else {
@@ -26,7 +26,7 @@ function positionsFar(position1, position2) {
     return new Date(position2.fixTime).getTime() - new Date(position1.fixTime).getTime() > minMinutes * 60 * 1000
 }
 
-async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='BR') {
+async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='CL') {
     const chunk = 100
     const results = []
     for (const d of deviceIds) {
