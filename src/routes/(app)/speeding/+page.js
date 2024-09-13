@@ -9,8 +9,10 @@ export async function load({fetch}) {
             const devices = await response.json()
             return {devices: devices.slice(0, 500)}
         } else {
-            if (response.status === 401) { await goto('/login') }
-            if (response.status === 403) { await goto('/login') }
+            if (response.status === 401 || response.status === 403) {
+                await goto('/login')
+                return
+            }
             else { alert(await response.text()) }
         }
     } catch (e) {
