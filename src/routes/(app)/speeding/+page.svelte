@@ -41,6 +41,6 @@
         reportLoaded=true
         loadingReport=false
     }} title="report" class="h-full w-full pb-4" src="{
-        `/reports/speeding?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}&selected=${selected}`
+        `/reports/reports/speeding?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}&selected=${selected}`
     }"/>
 {/if}
