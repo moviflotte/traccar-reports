@@ -26,7 +26,7 @@ function positionsFar(position1, position2) {
     return new Date(position2.fixTime).getTime() - new Date(position1.fixTime).getTime() > minMinutes * 60 * 1000
 }
 
-async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='CL') {
+async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='PT') {
     const chunk = 100
     const results = []
     for (const d of deviceIds) {
@@ -71,7 +71,9 @@ async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 
 let  countError = 0, countSuccess = 0
 async function invokeValhalla (route, i, chunk, country, threshold, results, retry = 3) {
     const slice = route.slice(i, i + chunk)
-    const url = `http://valhalla-${country}.pinme.io:8002/trace_attributes`
+    const url = country === 'PT' ?
+        `http://116.203.80.174:8003/trace_attributes` :
+        `http://valhalla-${country}.pinme.io:8002/trace_attributes`
     const body = {
         costing: 'auto',
         shape_match: 'map_snap',
