@@ -26,7 +26,7 @@ function positionsFar(position1, position2) {
 }
 
 async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='PT') {
-    const chunk = 100
+    const chunk = 300
     const results = []
     for (const d of deviceIds) {
         const route = routes.filter(r => r.deviceId === parseInt(d))
