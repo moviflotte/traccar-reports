@@ -71,7 +71,7 @@ let  countError = 0, countSuccess = 0
 async function invokeValhalla (route, i, chunk, country, threshold, results, retry = 3) {
     const slice = route.slice(i, i + chunk)
     const url = country === 'PT' ?
-        `http://116.203.80.174:8003/trace_attributes` :
+        `http://valhalla-CL.pinme.io:8003/trace_attributes` :
         `http://valhalla-${country}.pinme.io:8002/trace_attributes`
     const body = {
         costing: 'auto',
