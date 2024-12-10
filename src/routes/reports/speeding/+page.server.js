@@ -16,10 +16,9 @@ async function getEvents(selected, traccar, searchParams, request) {
 
 export async function load({request, platform}) {
     const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
-    const s = platform && platform.env.TRACCAR_SERVER_HTTPS ? 's' : ''
     const {searchParams} = new URL(request.url)
     const selected = searchParams.get('selected').split(',')
-    return {events: await getEvents(selected, `http${s}://${traccar}`, searchParams, request)}
+    return {events: await getEvents(selected, `http://${traccar}`, searchParams, request)}
 }
 const minMinutes = 2
 function positionsFar(position1, position2) {
