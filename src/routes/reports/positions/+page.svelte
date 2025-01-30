@@ -88,8 +88,14 @@
                     {new Date(position.fixTime).toLocaleString()}
                 </TableBodyCell>
                 {#each attributeKeys as key}
-                    <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0">
-                        {position.attributes[key] ?? '-'}  <!-- Show value or "-" if missing -->
+                    <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0" >
+                        {#if typeof position.attributes[key] === 'number'}
+                            {Number.isInteger(position.attributes[key])
+                                ? position.attributes[key]
+                                : position.attributes[key].toFixed(2)}
+                        {:else}
+                            {position.attributes[key] ?? '-'}
+                        {/if}
                     </TableBodyCell>
                 {/each}
             </TableBodyRow>
