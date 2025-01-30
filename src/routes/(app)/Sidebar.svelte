@@ -10,10 +10,16 @@
     import { page } from '$app/stores';
     import { afterNavigate } from '$app/navigation';
     import {
-        AngleDownOutline, AngleLeftOutline, AngleRightOutline, AngleUpOutline, GridPlusOutline
+        AngleDownOutline,
+        AngleLeftOutline,
+        AngleRightOutline,
+        AngleUpOutline,
+        ExclamationCircleOutline,
+        FileLinesSolid
     } from "flowbite-svelte-icons";
     import config from 'tailwindcss/defaultTheme';
     import {onMount} from "svelte";
+    import { t } from "$lib/i18n";
 
 
     export let drawerHidden = false;
@@ -39,7 +45,8 @@
 
 
     let items = [
-        { name: 'Speeding', icon: GridPlusOutline, href: '/reports/speeding' },
+        { name: t('Positions'), icon: FileLinesSolid, href: '/reports/positions' },
+        { name: t('Speeding'), icon: ExclamationCircleOutline, href: '/reports/speeding' },
     ];
 
     let lg,sm;

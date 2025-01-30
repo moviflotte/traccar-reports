@@ -81,11 +81,11 @@
 <div bind:this={tbl}>
     <Table hoverable="true" class="table-fixed p-0">
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-        <TableHeadCell class="text-center">{$t('time')}</TableHeadCell>
-        <TableHeadCell class="text-center">{$t('address')}</TableHeadCell>
-        <TableHeadCell class="text-center p-0 w-20">{$t('max allowed')}</TableHeadCell>
-        <TableHeadCell class="text-center p-0 w-64">{$t('speeding')}</TableHeadCell>
-        <TableHeadCell class="text-center w-[310px]">{$t('map')}</TableHeadCell>
+        <TableHeadCell class="text-center">{t('time')}</TableHeadCell>
+        <TableHeadCell class="text-center">{t('address')}</TableHeadCell>
+        <TableHeadCell class="text-center p-0 w-20">{t('max allowed')}</TableHeadCell>
+        <TableHeadCell class="text-center p-0 w-64">{t('speeding')}</TableHeadCell>
+        <TableHeadCell class="text-center w-[310px]">{t('map')}</TableHeadCell>
     </TableHead>
     <TableBody>
         {#each data.events as event}

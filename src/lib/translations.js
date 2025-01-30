@@ -1,13 +1,14 @@
 export default {
-    en: {
-        "homepage.title": "Hello, World!",
-        "homepage.welcome": "Hi <strong>{{name}}</strong>, how are you?",
-        "homepage.time": "The current time is: {{time}}"
+    pt: {
+        "time": "Hora",
+        "Positions": "Posiciones",
+        "Speeding": "Velocidade",
+        "Position report": "Relatório de posições"
     },
     es: {
-        "homepage.title": "¡Hola Mundo!",
-        "homepage.welcome": "Hola, <strong>{{name}}</strong>, ¿cómo estás?",
-        "homepage.time": "La hora actual es: {{time}}",
-        "time": "Hora"
+        "time": "Hora",
+        "Positions": "Posiciones",
+        "Speeding": "Excesos de velocidad",
+        "Position report": "Reporte de posiciones"
     },
 };
