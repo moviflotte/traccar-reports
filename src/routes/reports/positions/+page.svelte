@@ -74,7 +74,7 @@
     Total: {data.positions.length}
 </div>
 <div bind:this={tbl}>
-    <Table hoverable="true" class="table-fixed p-0">
+    <Table hoverable="true">
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
         <TableHeadCell class="text-center">{t('time')}</TableHeadCell>
         {#each attributeKeys as key}
@@ -88,7 +88,7 @@
                     {new Date(position.fixTime).toLocaleString()}
                 </TableBodyCell>
                 {#each attributeKeys as key}
-                    <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0" >
+                    <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0 max-w-1" >
                         {#if typeof position.attributes[key] === 'number'}
                             {Number.isInteger(position.attributes[key])
                                 ? position.attributes[key]
