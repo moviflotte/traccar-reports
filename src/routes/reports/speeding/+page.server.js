@@ -3,7 +3,7 @@ async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
         const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
-        console.log(url)
+        // console.log(url)
         const cookie = request.headers.get('cookie')
         const response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
         if (response.ok) {
@@ -107,7 +107,7 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
             lat: p.latitude
         }))
     }
-    console.log(url)
+    // console.log(url)
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(body)
