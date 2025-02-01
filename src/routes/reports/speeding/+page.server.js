@@ -1,3 +1,4 @@
+import {setLocale} from '$lib/i18n'
 async function getEvents(selected, traccar, searchParams, request) {
     const result = []
     for (const deviceId of selected) {
@@ -40,6 +41,7 @@ async function getCountry(position, traccar, cookie) {
 
 export async function load({request, platform}) {
     const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
+    setLocale(request.headers.get('accept-language')?.split(',')[0])
     const {searchParams} = new URL(request.url)
     const selected = searchParams.get('selected').split(',')
     return {events: await getEvents(selected, `http://${traccar}`, searchParams, request)}
