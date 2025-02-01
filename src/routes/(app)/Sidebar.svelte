@@ -27,8 +27,6 @@
     let activeMainSidebar;
 
     afterNavigate((navigation) => {
-        // this fixes https://github.com/themesberg/flowbite-svelte/issues/364
-        document.getElementById('svelte')?.scrollTo({ top: 0 });
         closeDrawer();
         activeMainSidebar = navigation.to?.url.pathname ?? '';
     });
@@ -73,7 +71,7 @@
         asideClass={`fixed sm:static inset-0 z-30 min-h-full w-auto ${collapsed?'':'lg:w-64'} lg:h-auto border-e border-gray-200 dark:border-gray-600 lg:overflow-y-visible lg:block`}
 >
     <SidebarWrapper
-            divClass="overflow-y-auto px-3 pt-20 lg:pt-5 h-full bg-white scrolling-touch max-w-2xs lg:h-[calc(100vh-4rem)] lg:block dark:bg-gray-800 lg:me-0 lg:sticky top-2"
+            divClass="overflow-y-auto px-3 pt-20 lg:pt-5 h-full scrolling-touch max-w-2xs lg:h-[calc(100vh-4rem)] lg:block lg:me-0 lg:sticky top-2"
     >
         <nav class="divide-y divide-gray-200 dark:divide-gray-700">
             <SidebarGroup ulClass={groupClass} class="mb-3">
