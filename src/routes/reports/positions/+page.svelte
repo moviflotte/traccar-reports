@@ -16,23 +16,25 @@
     let tbl
     let maximized = false
 
-    let attributeKeys = [];
+    let columns = []
 
     if (data.positions.length) {
+        columns = Object.keys(data.positions[0]).filter(k => k !== 'attributes')
         const keysSet = new Set();
         data.positions.forEach(position => {
             Object.keys(position.attributes).forEach(key => keysSet.add(key));
         });
-        attributeKeys = Array.from(keysSet);
+        columns = columns.concat(Array.from(keysSet))
     }
+    const getValue = (position, key) => position[key] ||  position.attributes[key]
 </script>
 
 <svelte:window on:afterprint={() => showExport=true} />
 
 {#if showExport }
 <Toolbar embedded class="w-full">
-    <div slot="end" class="flex items-center space-x-2">
-        <Button size="sm" color="alternative" class="gap-2 px-3" on:click={() => {
+    <div slot="end" class="flex items-center space-x-1">
+        <Button size="sm" color="alternative" class="gap-1 px-2" on:click={() => {
             if (maximized) {
                 if (document.exitFullscreen) {
                     document.exitFullscreen()
@@ -67,7 +69,7 @@
 </Toolbar>
 {/if}
 
-<Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl pb-4">
+<Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
     {t('Positions report')}
 </Heading>
 <div style="text-align-last: end">
@@ -76,25 +78,25 @@
 <div bind:this={tbl}>
     <Table hoverable="true">
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-        <TableHeadCell class="text-center">{t('time')}</TableHeadCell>
-        {#each attributeKeys as key}
+        {#each columns as key}
             <TableHeadCell class="text-center">{key}</TableHeadCell>
         {/each}
     </TableHead>
     <TableBody>
         {#each data.positions as position}
             <TableBodyRow>
-                <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0">
-                    {new Date(position.fixTime).toLocaleString()}
-                </TableBodyCell>
-                {#each attributeKeys as key}
-                    <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0 max-w-1" >
-                        {#if typeof position.attributes[key] === 'number'}
-                            {Number.isInteger(position.attributes[key])
-                                ? position.attributes[key]
-                                : position.attributes[key].toFixed(2)}
+                {#each columns as key}
+                    <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0.5" >
+                        {#if key === 'latitude' || key === 'longitude'}
+                            {getValue(position, key).toFixed(6)}
+                        {:else if typeof getValue(position, key) === 'number'}
+                            {Number.isInteger(getValue(position, key))
+                                ? getValue(position, key)
+                                : getValue(position, key).toFixed(2)}
+                        {:else if key.endsWith('Time')}
+                            {new Date(getValue(position, key)).toLocaleString()}
                         {:else}
-                            {position.attributes[key] ?? '-'}
+                            {getValue(position, key) || '-'}
                         {/if}
                     </TableBodyCell>
                 {/each}
