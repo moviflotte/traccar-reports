@@ -1,6 +1,6 @@
 import translations from "./translations";
 
-let locale = navigator.language && navigator.language.substring(0, 2)
+let locale = navigator && navigator.language && navigator.language.substring(0, 2)
 
 export const t = ( key ) => (translations[locale] && translations[locale][key]) || key
 
