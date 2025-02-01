@@ -3,16 +3,40 @@ async function getEvents(selected, traccar, searchParams, request) {
     for (const deviceId of selected) {
         const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         console.log(url)
-        const response = await fetch(url,
-            {headers: {cookie: request.headers.get('cookie')}, redirect: 'follow'})
+        const cookie = request.headers.get('cookie')
+        const response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
         if (response.ok) {
-            result.push(await getSpeedEvents(selected, await response.json()))
+            const positions = await response.json()
+            if (!positions.length) {
+                console.warn('ignoring', url)
+                continue
+            }
+            const country = await getCountry(positions[0], traccar, cookie)
+            result.push(await getSpeedEvents(selected, positions, 1, 0, country))
         } else {
             throw new Error('error status ' + response.status + ' ' + await response.text())
         }
     }
     return result.flat()
 }
+
+async function getCountry(position, traccar, cookie) {
+    const url = `${traccar}/api/server/geocode?latitude=${position.latitude}&longitude=${position.longitude}`;
+    console.log(url)
+    const response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
+    if (response.ok) {
+        const address = await response.text()
+        console.log(address)
+        switch(address.split(',').slice(-1)[0].trim()) {
+            case 'Chile':
+                return 'CL'
+            default:
+                return 'BR'
+        }
+    }
+    return 'CL'
+}
+
 
 export async function load({request, platform}) {
     const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
@@ -89,7 +113,7 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
     if (!response.ok) {
         const e = await response.json()
         if (e.error_code === 444 || e.error_code === 171) {
-            console.warn(i, i+chunk, e)
+            console.warn(countSuccess, i, i+chunk, e)
             return
         }
         if (--retry) {

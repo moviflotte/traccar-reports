@@ -26,7 +26,7 @@
         });
         columns = columns.concat(Array.from(keysSet))
     }
-    const getValue = (position, key) => position[key] ||  position.attributes[key]
+    const getValue = (position, key) => position[key] || position.attributes[key]
 </script>
 
 <svelte:window on:afterprint={() => showExport=true} />

@@ -1,7 +1,6 @@
 <script>
-    import {Button, Heading, Toolbar, Spinner} from "flowbite-svelte";
+    import {Button, Heading, Toolbar, Spinner, Datepicker} from "flowbite-svelte";
     import SelectDevices from "$lib/components/SelectDevices.svelte";
-    import DatePicker from "$lib/components/DatePicker.svelte";
     import {setAlert} from "$lib/store.js";
     let loadingReport = false
     let start, end, selected, datePicker
@@ -16,11 +15,12 @@
 <Toolbar class="w-full py-4 text-gray-500 dark:text-gray-400" embedded>
     <div class="flex gap-4">
         <SelectDevices devices={data.devices} bind:selected="{selected}"/>
-        <DatePicker bind:datePicker="{datePicker}"></DatePicker>
+    </div>
+    <div class="p-4 w-96">
+        <Datepicker locale="{navigator.language}" range bind:rangeFrom={start} bind:rangeTo={end} bind:datePicker="{datePicker}"></Datepicker>
     </div>
     <div class="p-4">
         <Button class="whitespace-nowrap" on:click={async () => {
-            [start, end] = datePicker.getDates()
             loadingReport = false
             reportLoaded = false
             if (selected && selected.length && start && end) {
