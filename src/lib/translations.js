@@ -4,7 +4,8 @@ export default {
         "Positions": "Posiciones",
         "Speeding": "Velocidade",
         "Position report": "Relatório de posições",
-        "Select devices": "Seleccionar veículo",
+        "Select device": "Seleccionar veículo",
+        "Select devices": "Seleccionar veículos",
         "address": "Endereço",
         "max allowed": "Limite",
         "speeding": "Duração",
@@ -19,6 +20,7 @@ export default {
         "Positions": "Posiciones",
         "Speeding": "Excesos de velocidad",
         "Position report": "Reporte de posiciones",
-        "Select devices": "Seleccione vehículo"
+        "Select device": "Seleccione vehículo",
+        "Select devices": "Seleccione vehículos"
     },
 };

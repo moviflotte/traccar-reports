@@ -1,12 +1,12 @@
 <script>
     import {Button, Heading, Toolbar, Spinner, Datepicker} from "flowbite-svelte";
-    import SelectDevices from "$lib/components/SelectDevices.svelte";
     import {setAlert} from "$lib/store.js";
     let loadingReport = false
     let start, end, selected, datePicker
     export let data
     let reportLoaded = false
     import {t} from '$lib/i18n.js'
+    import SelectDevice from "$lib/components/SelectDevice.svelte";
 </script>
 
 <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
@@ -14,7 +14,7 @@
 </Heading>
 <Toolbar class="w-full py-4 text-gray-500 dark:text-gray-400" embedded>
     <div class="flex gap-4">
-        <SelectDevices devices={data.devices} bind:selected="{selected}"/>
+        <SelectDevice devices={data.devices} bind:selected="{selected}"/>
     </div>
     <div class="p-4 w-96">
         <Datepicker locale="{navigator.language}" range bind:rangeFrom={start} bind:rangeTo={end} bind:datePicker="{datePicker}"></Datepicker>
@@ -23,7 +23,7 @@
         <Button class="whitespace-nowrap" on:click={async () => {
             loadingReport = false
             reportLoaded = false
-            if (selected && selected.length && start && end) {
+            if (selected && start && end) {
                 setTimeout(() => loadingReport = true, 100)
             } else {
                 setAlert('Please select devices and dates')
