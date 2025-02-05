@@ -23,12 +23,13 @@ async function getEvents(selected, traccar, searchParams, request) {
 
 async function getCountry(position, traccar, cookie) {
     const url = `${traccar}/api/server/geocode?latitude=${position.latitude}&longitude=${position.longitude}`;
-    console.log(url)
     const response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
     if (response.ok) {
         const address = await response.text()
         console.log(address)
         switch(address.split(',').slice(-1)[0].trim()) {
+            case 'Portugal':
+                return 'PT'
             case 'Chile':
                 return 'CL'
             default:
