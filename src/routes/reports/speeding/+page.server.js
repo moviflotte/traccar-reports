@@ -97,9 +97,7 @@ async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 
 let  countError = 0, countSuccess = 0
 async function invokeValhalla (route, i, chunk, country, threshold, results, retry = 3) {
     const slice = route.slice(i, i + chunk)
-    const url = country === 'PT' ?
-        `http://valhalla-CL.pinme.io/trace_attributes` :
-        `http://valhalla-${country}.pinme.io:8002/trace_attributes`
+    const url = `http://valhalla-${country}.pinme.io/trace_attributes`
     const body = {
         costing: 'auto',
         shape_match: 'map_snap',
@@ -108,7 +106,7 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
             lat: p.latitude
         }))
     }
-    // console.log(url)
+    console.log(url)
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(body)
