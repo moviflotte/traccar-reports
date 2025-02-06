@@ -23,7 +23,6 @@
     import {point} from "@turf/helpers";
 
     function buildGoogleStaticMapURL(coordinates, points) {
-        console.log('buildGoogleStaticMapURL')
         const baseUrl = "https://maps.googleapis.com/maps/api/staticmap?";
         const size = "size=300x200";
         const path = coordinates.map(c =>`path=color:0x00ff00ff|weight:6|${c.map(node => `${node[0]},${node[1]}`).join('|')}`).join('&');

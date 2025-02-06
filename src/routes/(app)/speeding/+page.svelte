@@ -39,6 +39,10 @@
         reportLoaded=true
         loadingReport=false
     }} title="report" class="h-full w-full pb-4" src="{
-        `/reports/reports/speeding?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}&selected=${selected}`
-    }"></iframe>
+    (() => {
+        let endDate = new Date(end);
+        endDate.setHours(23, 59, 59, 999);
+        return `/reports/reports/speeding?start=${new Date(start).toISOString()}&end=${endDate.toISOString()}&selected=${selected}`;
+    })()
+}"></iframe>
 {/if}
