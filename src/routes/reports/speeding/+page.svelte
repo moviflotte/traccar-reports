@@ -14,6 +14,7 @@
     import SpeedLimitSign from "$lib/components/SpeedLimitSign.svelte";
     import {VisXYContainer, VisAxis, VisArea, VisTooltip, VisCrosshair, VisLine} from '@unovis/svelte'
     export let data;
+    export let devices;
     let showExport = true
     let tbl
     let maximized = false
@@ -83,6 +84,7 @@
 <div bind:this={tbl}>
     <Table hoverable="true" class="table-fixed p-0">
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
+        <TableHeadCell class="text-center">{t('vehicle')}</TableHeadCell>
         <TableHeadCell class="text-center">{t('time')}</TableHeadCell>
         <TableHeadCell class="text-center">{t('address')}</TableHeadCell>
         <TableHeadCell class="text-center p-0 w-20">{t('max allowed')}</TableHeadCell>
@@ -92,6 +94,9 @@
     <TableBody>
         {#each data.events as event}
             <TableBodyRow>
+                <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0">
+                    {event.device && event.device.name}
+                </TableBodyCell>
                 <TableBodyCell class="text-center overflow-hidden overflow-ellipsis p-0">
                     {new Date(event.positions[0].fixTime).toLocaleString()}
                 </TableBodyCell>

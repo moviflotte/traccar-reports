@@ -1,11 +1,15 @@
 import {setLocale} from '$lib/i18n'
 async function getEvents(selected, traccar, searchParams, request) {
+    const cookie = request.headers.get('cookie')
+    let response = await fetch(`${traccar}/api/devices`, {headers: {cookie, redirect: 'follow'}})
+    let devices = []
+    if (response.ok) {
+        devices = await response.json()
+    }
     const result = []
     for (const deviceId of selected) {
         const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
-        // console.log(url)
-        const cookie = request.headers.get('cookie')
-        const response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
+        response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
         if (response.ok) {
             const positions = await response.json()
             if (!positions.length) {
@@ -13,7 +17,7 @@ async function getEvents(selected, traccar, searchParams, request) {
                 continue
             }
             const country = await getCountry(positions[0], traccar, cookie)
-            result.push(await getSpeedEvents(selected, positions, 1, 0, country))
+            result.push(await getSpeedEvents(devices, selected, positions, 1, 0, country))
         } else {
             throw new Error('error status ' + response.status + ' ' + await response.text())
         }
@@ -53,11 +57,12 @@ function positionsFar(position1, position2) {
     return new Date(position2.fixTime).getTime() - new Date(position1.fixTime).getTime() > minMinutes * 60 * 1000
 }
 
-async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 0, country='PT') {
+async function getSpeedEvents (devices, deviceIds, routes, threshold=0, minimumMinutes = 0, country='PT') {
     const chunk = 300
     const results = []
     for (const d of deviceIds) {
         const route = routes.filter(r => r.deviceId === parseInt(d))
+        const device = devices.find(_d => _d.id === parseInt(d))
         let current
         for (let i = 0; i < route.length; i += chunk) {
             const result = await invokeValhalla(route, i, chunk, country, threshold, results)
@@ -79,7 +84,8 @@ async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 
                             shapes: [],
                             mPoints: [],
                             edges: [],
-                            positions: []
+                            positions: [],
+                            device
                         }
                         results.push(current)
                     }

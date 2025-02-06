@@ -9,9 +9,11 @@ export default {
         "address": "Endereço",
         "max allowed": "Limite",
         "speeding": "Duração",
-        "map": "Mapa"
+        "map": "Mapa",
+        "vehicle": "Veículo"
     },
     es: {
+        "vehicle": "Vehículo",
         "map": "Mapa",
         "speeding": "Duración",
         "max allowed": "Limite",
