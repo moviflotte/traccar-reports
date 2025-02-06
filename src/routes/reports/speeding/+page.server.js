@@ -70,7 +70,7 @@ async function getSpeedEvents (deviceIds, routes, threshold=0, minimumMinutes = 
             matched_points.forEach((mp, mIndex) => {
                 const edge = edges[mp.edge_index]
                 const position = route[mIndex + i]
-                if (edge && (edge.speed_limit + (threshold || 0)) < position.speed * 1.852) {
+                if (edge && (edge.speed_limit + (threshold || 1)) < position.speed * 1.852) {
                     if (!current ||
                         current.edges.slice(-1)[0].speed_limit !== edge.speed_limit ||
                         positionsFar(current.positions.slice(-1)[0], position)) {

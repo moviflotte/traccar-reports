@@ -21,6 +21,9 @@
     import {formatDuration, intervalToDuration} from "date-fns";
     import distance from "@turf/distance";
     import {point} from "@turf/helpers";
+    import { es, pt } from 'date-fns/locale';
+    const locales = { es, pt };
+    const locale = locales[navigator.language.split('-')[0]] || pt
 
     function buildGoogleStaticMapURL(coordinates, points) {
         const baseUrl = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -75,7 +78,7 @@
 {/if}
 
 <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl pb-4">
-    Relatório de Excessos de Velocidade
+    {t('Speeding')}
 </Heading>
 
 <div bind:this={tbl}>
@@ -124,8 +127,8 @@
                             formatDuration(intervalToDuration({
                                 start: new Date(event.positions[0].fixTime),
                                 end: new Date(event.positions.slice(-1)[0].fixTime)
-                            }))
-                        }<br>
+                            }), {locale})
+                        }
                         {
                             event.positions.reduce((acc, current, index, positions) => {
                                 if (index === 0) return acc
@@ -135,8 +138,13 @@
                                 return acc + distance(point1, point2, { units: 'kilometers' })
                             }, 0).toFixed(1) + ' km'
                         }
+                        <br>
+                        {
+                            (event.positions.reduce((acc, current) => current.speed > acc ? current.speed : acc, 0) * 1.852).toFixed(1)
+                        } km/h
+
                     {:else}
-                        {Math.round(event.positions[0].speed * 1.852)}
+                        {(event.positions[0].speed * 1.852).toFixed(1)} km/h
                     {/if}
                 </TableBodyCell>
                 <TableBodyCell class="p-1">
