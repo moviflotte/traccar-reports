@@ -38,7 +38,7 @@
 </script>
 
 <svelte:window on:afterprint={() => showExport=true} />
-
+<div style="padding: 10px">
 {#if showExport }
 <Toolbar embedded class="w-full">
     <div slot="end" class="flex items-center space-x-2">
@@ -158,6 +158,7 @@
         {/each}
     </TableBody>
 </Table>
+</div>
 </div>
 
 <style>

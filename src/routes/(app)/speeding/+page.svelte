@@ -8,7 +8,7 @@
     export let data
     let reportLoaded = false
 </script>
-
+<div class="flex flex-col h-full">
 <Toolbar class="w-full py-4 text-gray-500 dark:text-gray-400" embedded>
     <div class="flex p-4">
         <SelectDevices devices={data.devices} bind:selected="{selected}"/>
@@ -38,7 +38,7 @@
     <iframe on:load={() => {
         reportLoaded=true
         loadingReport=false
-    }} title="report" class="h-full w-full pb-4" src="{
+    }} title="report" class="flex-grow" src="{
     (() => {
         let endDate = new Date(end);
         endDate.setHours(23, 59, 59, 999);
@@ -46,3 +46,4 @@
     })()
 }"></iframe>
 {/if}
+</div>
