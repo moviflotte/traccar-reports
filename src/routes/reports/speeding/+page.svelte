@@ -23,7 +23,6 @@
     import {point} from "@turf/helpers";
     import { es, pt } from 'date-fns/locale';
     const locales = { es, pt };
-    const locale = data.locale
 
     function buildGoogleStaticMapURL(coordinates, points) {
         const baseUrl = "https://maps.googleapis.com/maps/api/staticmap?";
@@ -127,7 +126,7 @@
                             formatDuration(intervalToDuration({
                                 start: new Date(event.positions[0].fixTime),
                                 end: new Date(event.positions.slice(-1)[0].fixTime)
-                            }), {locale})
+                            }), {locale: locales[data.locale] || pt})
                         }
                         {
                             event.positions.reduce((acc, current, index, positions) => {
