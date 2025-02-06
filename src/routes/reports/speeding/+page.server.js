@@ -42,10 +42,11 @@ async function getCountry(position, traccar, cookie) {
 
 export async function load({request, platform}) {
     const traccar = (platform && platform.env.TRACCAR_SERVER) || import.meta.env.VITE_TRACCAR_SERVER
-    setLocale(request.headers.get('accept-language')?.split(',')[0])
+    const locale = request.headers.get('accept-language')?.split(',')[0]
+    setLocale(locale)
     const {searchParams} = new URL(request.url)
     const selected = searchParams.get('selected').split(',')
-    return {events: await getEvents(selected, `http://${traccar}`, searchParams, request)}
+    return {locale, events: await getEvents(selected, `http://${traccar}`, searchParams, request)}
 }
 const minMinutes = 2
 function positionsFar(position1, position2) {
