@@ -134,9 +134,10 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
                 slice[0] && slice[0].deviceId, slice[0] && slice[0].address, slice[0] && slice[0].fixTime, country, 'chunk', chunk, 'success', countSuccess, 'error', countError)
         }
         countError++
+    } else {
+        countSuccess++
+        return response.json()
     }
-    countSuccess++
-    return response.json()
 }
 
 
