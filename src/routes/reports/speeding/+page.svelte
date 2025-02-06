@@ -158,7 +158,7 @@
 <style>
     @page {
         size: A4 landscape;
-        margin: 5mm;
+        margin: 10mm;
     }
     div {
         print-color-adjust: exact;
