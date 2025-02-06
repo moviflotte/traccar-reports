@@ -1,7 +1,8 @@
 <script>
-    import {Button, Heading, Toolbar, Spinner, Datepicker} from "flowbite-svelte";
+    import {Button, Toolbar, Spinner, Datepicker} from "flowbite-svelte";
     import SelectDevices from "$lib/components/SelectDevices.svelte";
     import {setAlert} from "$lib/store.js";
+    import {t} from "$lib/i18n.js"
     let loadingReport = false
     let start, end, selected, datePicker
     export let data
@@ -28,7 +29,7 @@
             {#if loadingReport}
                 <Spinner class="me-3" size="4" color="white"/>
             {/if}
-            {loadingReport?'Loading...':'Generate'}
+            {loadingReport?t('Carregando...'):t('Gerar')}
         </Button>
     </div>
 </Toolbar>

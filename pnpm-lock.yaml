@@ -27,11 +27,8 @@ devDependencies:
     specifier: ^7.1.0
     version: 7.2.0
   '@unovis/svelte':
-    specifier: 1.4.3-beta.0
-    version: 1.4.3-beta.0(@unovis/ts@1.4.3-beta.0)(svelte@5.19.6)
-  '@unovis/ts':
-    specifier: 1.4.3-beta.0
-    version: 1.4.3-beta.0
+    specifier: 1.5.0
+    version: 1.5.0(@unovis/ts@1.5.0)(svelte@5.19.6)
   autoprefixer:
     specifier: ^10.4.20
     version: 10.4.20(postcss@8.5.1)
@@ -1712,18 +1709,18 @@ packages:
       lodash-es: 4.17.21
     dev: true
 
-  /@unovis/svelte@1.4.3-beta.0(@unovis/ts@1.4.3-beta.0)(svelte@5.19.6):
-    resolution: {integrity: sha512-6rpY7aFhqmWgz4VixX0UgCaMrw8wlRzhjPox31qdO9DDTsE6Em4+mpMXCzKj1WpRx1GZ8CDdcCfYRiot0CEdTw==}
+  /@unovis/svelte@1.5.0(@unovis/ts@1.5.0)(svelte@5.19.6):
+    resolution: {integrity: sha512-R6yw+TUr/MKSk8omyV4hAI7oNU81nqd93H844M7CAgVEw/sp8lL2a18J/GdPpQPdHzM7UOYexsD8IJIcO9ctNA==}
     peerDependencies:
-      '@unovis/ts': 1.4.3-beta.0
-      svelte: ^3.48.0 || ^4.0.0
+      '@unovis/ts': 1.5.0
+      svelte: '^3.48.0 || ^4.0.0 '
     dependencies:
-      '@unovis/ts': 1.4.3-beta.0
+      '@unovis/ts': 1.5.0
       svelte: 5.19.6
     dev: true
 
-  /@unovis/ts@1.4.3-beta.0:
-    resolution: {integrity: sha512-8Uyf6yHkOP1a1NoIONrUp+PxsRmgTkxA4KvqXyylqrwFXFNY5spmZndc8oMv14257iJUr7W0TJlAtEADOwiajw==}
+  /@unovis/ts@1.5.0:
+    resolution: {integrity: sha512-dMRlhBKwazkGxg65xXl4KHvmqX0+2C5qJsUqTFjcg/59G9RCjej9uFF4qsk0x3zY/FnAvK4AjKQYygQfBWzd+w==}
     dependencies:
       '@emotion/css': 11.13.5
       '@juggle/resize-observer': 3.4.0
