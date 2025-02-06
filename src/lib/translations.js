@@ -2,7 +2,7 @@ export default {
     pt: {
         "time": "Hora",
         "Positions": "Posiciones",
-        "Speeding": "Velocidade",
+        "Speeding": "Excessos de Velocidade",
         "Position report": "Relatório de posições",
         "Select device": "Seleccionar veículo",
         "Select devices": "Seleccionar veículos",
