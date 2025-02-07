@@ -40,7 +40,7 @@
         loadingReport=false
     }} title="report" class="flex-grow" src="{
     (() => {
-        let endDate = new Date(endDate);
+        let endDate = new Date(end);
         endDate.setHours(23, 59, 59, 999);
         return `/reports/reports/speeding?start=${new Date(start).toISOString()}&end=${endDate.toISOString()}&selected=${selected}`;
     })()
