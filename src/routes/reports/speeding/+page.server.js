@@ -8,7 +8,7 @@ async function getEvents(selected, traccar, searchParams, request) {
     }
     const result = []
     for (const deviceId of selected) {
-        const url = `${traccar}/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
+        const url = `https://ltqgfyvcklxzaonv7h4rlmghai0rszop.lambda-url.us-east-1.on.aws/api/positions?deviceId=${deviceId}&from=${searchParams.get('start')}&to=${searchParams.get('end')}`;
         response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
         if (response.ok) {
             const positions = await response.json()
