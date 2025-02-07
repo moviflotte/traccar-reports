@@ -1,6 +1,6 @@
 <script>
     import {
-        Button, Heading,
+        Button, Heading, MultiSelect,
         Table,
         TableBody,
         TableBodyCell,
@@ -11,21 +11,21 @@
     import { t } from "$lib/i18n";
     import {ExpandOutline, FileChartBarSolid, FilePdfSolid, MinimizeOutline} from "flowbite-svelte-icons";
     import { utils, writeFileXLSX } from 'xlsx';
-    export let data;
-    let showExport = true
+    const { data } = $props();
+    let showExport = $state(true)
     let tbl
-    let maximized = false
-
-    let columns = []
+    let maximized = $state(false)
+    let _columns
 
     if (data.positions.length) {
-        columns = Object.keys(data.positions[0]).filter(k => k !== 'attributes')
+        _columns = Object.keys(data.positions[0]).filter(k => k !== 'attributes')
         const keysSet = new Set();
         data.positions.forEach(position => {
             Object.keys(position.attributes).forEach(key => keysSet.add(key));
         });
-        columns = columns.concat(Array.from(keysSet))
+        _columns = _columns.concat(Array.from(keysSet))
     }
+    let columns = $state(_columns)
     const getValue = (position, key) => position[key] || position.attributes[key]
 </script>
 
@@ -33,6 +33,9 @@
 
 {#if showExport }
 <Toolbar embedded class="w-full">
+    <div class="p-2">
+        <MultiSelect items={columns && columns.map(c => ({value: c, name: c}))} bind:value={columns} />
+    </div>
     <div slot="end" class="flex items-center space-x-1">
         <Button size="sm" color="alternative" class="gap-1 px-2" on:click={() => {
             if (maximized) {
