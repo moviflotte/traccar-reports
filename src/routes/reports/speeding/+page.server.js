@@ -31,13 +31,14 @@ async function getCountry(position, traccar, cookie) {
     if (response.ok) {
         const address = await response.text()
         console.log(address)
-        switch(address.split(',').slice(-1)[0].trim()) {
+        const c = address.split(',').slice(-1)[0].trim()
+        switch (c) {
             case 'Portugal':
                 return 'PT'
             case 'Chile':
                 return 'CL'
             default:
-                return 'BR'
+                return c
         }
     }
     return 'CL'
