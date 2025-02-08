@@ -23,6 +23,7 @@ export default {
         "Speeding": "Excesos de velocidad",
         "Position report": "Reporte de posiciones",
         "Select device": "Seleccione vehículo",
-        "Select devices": "Seleccione vehículos"
+        "Select devices": "Seleccione vehículos",
+        "Gerar": "Generar"
     },
 };
