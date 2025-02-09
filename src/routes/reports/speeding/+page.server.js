@@ -26,14 +26,14 @@ async function getEvents(selected, traccar, searchParams, request) {
 }
 
 async function getCountry(position, traccar, cookie) {
-    let address = position.address 
+    let address = position.address
     if (!address) {
         const url = `${traccar}/api/server/geocode?latitude=${position.latitude}&longitude=${position.longitude}`;
         const response = await fetch(url, {headers: {cookie, redirect: 'follow'}})
         if (response.ok) {
-            const address = await response.text()
+            address = await response.text()
         } else {
-            throw new Error('geocoding error ' + response.statusCode) 
+            throw new Error('geocoding error ' + response.statusCode)
         }
     }
     console.log(address)
@@ -46,7 +46,6 @@ async function getCountry(position, traccar, cookie) {
         default:
             return c
     }
-    return 'CL'
 }
 
 
