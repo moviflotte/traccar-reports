@@ -120,8 +120,8 @@
                 <TableBodyCell class="text-center {event.positions.length === 1 && 'text-lg'}">
                     {#if event.positions.length > 1}
                         <VisXYContainer height="100" data={event.positions}>
-                            <VisArea color="green" opacity={0.2} x={d => new Date(d.fixTime)} y={d => d.speed*1.852} />
-                            <VisLine color="green" x={d => new Date(d.fixTime)} y={d => d.speed*1.852} />
+                            <VisArea color="darkgreen" opacity={0.2} x={d => new Date(d.fixTime)} y={d => d.speed*1.852} />
+                            <VisLine color="darkgreen" x={d => new Date(d.fixTime)} y={d => d.speed*1.852} />
                             <VisLine color="red" strokeDasharray="5,5" x={d => new Date(d.fixTime)} y={event.edges[0].speed_limit} />
                             <VisAxis type="x" tickFormat="{(x) => new Date(x).toLocaleTimeString()}" />
                             <VisAxis type="y" />

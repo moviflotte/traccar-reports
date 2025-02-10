@@ -39,6 +39,8 @@ async function getCountry(position, traccar, cookie) {
     console.log(address)
     const c = address.split(',').slice(-1)[0].trim()
     switch (c) {
+        case 'Brazil':
+            return 'BR'
         case 'Portugal':
             return 'PT'
         case 'Chile':
