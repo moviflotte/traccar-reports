@@ -39,6 +39,8 @@ async function getCountry(position, traccar, cookie) {
     console.log(address)
     const c = address.split(',').slice(-1)[0].trim()
     switch (c) {
+        case 'Brazil':
+            return 'BR'
         case 'Portugal':
             return 'PT'
         case 'Chile':
@@ -124,19 +126,23 @@ async function invokeValhalla (route, i, chunk, country, threshold, results, ret
         body: JSON.stringify(body)
     })
     if (!response.ok) {
-        const e = await response.json()
-        if (e.error_code === 444 || e.error_code === 171) {
-            console.warn(countSuccess, i, i+chunk, e)
-            return
-        }
-        if (--retry) {
-            console.error('retry', retry, e.message, (e.response && e.response.data) || url, 'deviceId',
-                slice[0] && slice[0].deviceId, slice[0] && slice[0].address, slice[0] && slice[0].fixTime, country, 'chunk', chunk,
-                'success', countSuccess, 'error', countError)
-            return invokeValhalla(route, i, chunk, country, threshold, results, retry)
-        } else {
-            console.error(e.message, (e.response && e.response.data) || url, 'deviceId',
-                slice[0] && slice[0].deviceId, slice[0] && slice[0].address, slice[0] && slice[0].fixTime, country, 'chunk', chunk, 'success', countSuccess, 'error', countError)
+        try {
+            const e = await response.json()
+            if (e.error_code === 444 || e.error_code === 171) {
+                console.warn(countSuccess, i, i + chunk, e)
+                return
+            }
+            if (--retry) {
+                console.error('retry', retry, e.message, (e.response && e.response.data) || url, 'deviceId',
+                    slice[0] && slice[0].deviceId, slice[0] && slice[0].address, slice[0] && slice[0].fixTime, country, 'chunk', chunk,
+                    'success', countSuccess, 'error', countError)
+                return invokeValhalla(route, i, chunk, country, threshold, results, retry)
+            } else {
+                console.error(e.message, (e.response && e.response.data) || url, 'deviceId',
+                    slice[0] && slice[0].deviceId, slice[0] && slice[0].address, slice[0] && slice[0].fixTime, country, 'chunk', chunk, 'success', countSuccess, 'error', countError)
+            }
+        } catch (e) {
+            console.error(e)
         }
         countError++
     } else {
