@@ -116,6 +116,7 @@
                 </TableBodyCell>
                 <TableBodyCell>
                     <SpeedLimitSign limit="{event.edges[0].speed_limit}"/>
+                    <span style="visibility: hidden">{event.edges[0].speed_limit}</span>
                 </TableBodyCell>
                 <TableBodyCell class="text-center {event.positions.length === 1 && 'text-lg'}">
                     {#if event.positions.length > 1}
